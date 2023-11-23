@@ -1,19 +1,11 @@
 #!/bin/bash
-NO_TEX=0
+function set_extension_settings {
+    for EXT in extensions/*.sh 
+    do 
+        ./$EXT
+    done
+}
 
-while [ $# -gt 0 ]; do
-    case $1 in 
-        -nc|--no-code)
-            echo "No code";;
-        --no-tex)
-            NO_TEX=1
-    esac
-    shift
-done
-
-if [ $NO_TEX -eq 1 ]
-then
-    echo "no tex"
-else 
-    echo "tex"
-fi
+set_extension_settings
+exit 0
+set_extension_settings

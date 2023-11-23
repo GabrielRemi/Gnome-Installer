@@ -4,6 +4,13 @@ NO_CODE=0
 NO_EXTENSIONS=0
 NO_RUST=0
 
+function set_extension_settings {
+    for EXT in extensions/*.sh 
+    do 
+        ./$EXT
+    done
+}
+
 while [ $# -gt 0 ]; do
     case $1 in 
         -nc|--no-code)
@@ -17,6 +24,10 @@ while [ $# -gt 0 ]; do
             ;;
         -nr|--no-rust)
             NO_RUST=1
+            ;;
+        --reset-extensions)
+            set_extension_settings
+            exit 0
             ;;
     esac
     shift
@@ -41,7 +52,8 @@ then
         texlive-collection-pictures.noarch   \
         texlive-collection-plaingeneric.noarch \
         biber.noarch \
-        texlive-texcount.noarch
+        texlive-texcount.noarch \
+        texlive-dvipng.x86_64
 fi
 
 if [ $NO_RUST -eq 0]
