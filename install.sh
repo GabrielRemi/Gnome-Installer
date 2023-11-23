@@ -33,9 +33,9 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-sudo dnf install -y gcc g++ make git neofetch tldr
+sudo dnf install -y gcc g++ make git neofetch tldr vim
 
-if [ $NO_TEX -eq 0]
+if [ $NO_TEX -eq 0 ]
 then
     sudo dnf install -y \
         texlive-collection-basic.noarch \
@@ -56,21 +56,21 @@ then
         texlive-dvipng.x86_64
 fi
 
-if [ $NO_RUST -eq 0]
+if [ $NO_RUST -eq 0 ]
 then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 
 # Vs Code
 
-if [ $NO_CODE -eq 0]
+if [ $NO_CODE -eq 0 ]
 then
     sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
     dnf check-update
     sudo dnf install code # or code-insiders
 fi
 
-if [ $NO_EXTENSIONS -eq 0]
+if [ $NO_EXTENSIONS -eq 0 ]
 then
     # Extensions
     array=( 
