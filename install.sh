@@ -33,7 +33,8 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-sudo dnf install -y gcc g++ make git neofetch tldr vim
+sudo dnf install -y gcc g++ make git neofetch tldr vim gnome-tweaks.noarch 
+flatpak install flathub com.mattjakeman.ExtensionManager
 
 if [ $NO_TEX -eq 0 ]
 then
@@ -102,4 +103,6 @@ then
         gnome-extensions enable ${EXTENSION_ID}
         rm ${EXTENSION_ID}.zip
     done
+
+    set_extension_settings
 fi
