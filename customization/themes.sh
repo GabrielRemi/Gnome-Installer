@@ -3,5 +3,9 @@
 
 for folder in fonts icons themes
 do 
-    cp -r customization/$folder ~/.local/share/$folder
+    dir=~/.local/share/$folder
+    if [ ! -d $dir ]; then
+        mkdir $dir
+    fi
+    cp -t $dir customization/$folder
 done
