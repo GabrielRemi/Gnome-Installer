@@ -4,25 +4,45 @@ was run. It first loops over all extensions, finds all the keys and its values.
 Then it writes a script which sets all the key values to those values 
 which were found when running this script. This way one can run the script 
 on one machine and copy all of the settings to another one"""
-import os
+import os, sys
 #from dataclasses import dataclass, field
+from filemanagement import get_extension_names_from_file
 
 EXTENSIONS_PATH: str = "/org/gnome/shell/extensions/"
-
+os.chdir(os.path.dirname(__file__))
 
 class DConf:
-    """A class that stores all keys from all extensions"""
+    """A class that stores all keys from all extensions. if a list of 
+    extensions is given instead, do it only for those"""
 
-    def __init__(self):
+    def __init__(self, extension_list: list[str] | None = None):
         cmd: str = f"dconf list {EXTENSIONS_PATH}"
         self.__extensions_names: list[str] = os.popen(cmd).read().splitlines()
-        self.__extensions: list[Folder] = [
-            Folder(i, EXTENSIONS_PATH) for i in self.__extensions_names]
+        self.__extensions: list[Folder] = []
+        
+        if extension_list is None:
+            self.__extensions = [
+                Folder(i, EXTENSIONS_PATH) for i in self.__extensions_names]
+        else:
+            for i in self.__extensions_names:
+                if i in extension_list:
+                    self.__extensions.append(Folder(i, EXTENSIONS_PATH))
 
     @property
     def extensions(self):
         """getter for extension list"""
         return self.__extensions
+    
+    def get_command(self) -> list[str]:
+        """make a list of strings where for every string every line is a bash command to 
+        set the key values"""
+        cmd: list[str] = []
+        for i in self.extensions:
+            cmd.append(c := i.get_command())
+            with open(f"../extensions/{i.name[:-1]}.sh", "w", encoding="UTF-8") as file:
+                file.write(c)
+            
+        return cmd
 
 
 class Folder:
@@ -87,10 +107,17 @@ class Folder:
             
         for i in self.keys:
             txt = f"dconf read {self.path}{i}"
-            value = os.popen(txt).read()
-            cmd += f"dconf write {self.path}{i} {value}"
+            value = os.popen(txt).read().replace("\n", "")
+            cmd += f'dconf write {self.path}{i} "{value}"\n'
+            
+        return cmd
 
 
 if __name__ == "__main__":
-    dconf = DConf()
-    print(dconf.extensions[8].keys, dconf.extensions[8].folders)
+    extension_list: None | list[str] = None
+    if len(sys.argv) > 1:
+        extension_list = get_extension_names_from_file(sys.argv[1])
+
+    dconf = DConf(extension_list)
+    for i in dconf.get_command():
+        print(i, end="\n\n")
