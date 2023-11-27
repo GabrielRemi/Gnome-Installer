@@ -7,5 +7,5 @@ do
     if [ ! -d $dir ]; then
         mkdir $dir
     fi
-    cp -t $dir customization/$folder
+    cp -t $dir customization/$folder/*
 done
