@@ -68,3 +68,6 @@ if [ $NO_EXTENSIONS -eq 0 ]
 then
     ./extensions/extensions.sh
 fi
+
+## Themes
+./customization/themes.sh
