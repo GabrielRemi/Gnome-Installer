@@ -71,3 +71,6 @@ fi
 
 ## Themes
 ./customization/themes.sh
+
+## Pictures
+cp pictures/* ~/Pictures
